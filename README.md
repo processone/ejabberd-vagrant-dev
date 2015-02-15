@@ -36,7 +36,6 @@ to expose that VM to network (Outside your development machine)
 
 or if you want VirtualBox:
 
-    #!console
 	ulimit -n 4096 # see https://github.com/mitchellh/vagrant/issues/2435
 	vagrant up --provider=virtualbox
 
@@ -52,12 +51,10 @@ Note: if you have only VirtualBox or VMWare, no need to pass the provider argume
 
 You can simply ask vagrant to run Ansible to install and configure the needed software:
 
-    #!console
     vagrant provision
 
 Alternatively, you can manually run Ansible play
 
-    #!console
     ansible-playbook --connection ssh -u vagrant -i ansible/ansible.vmhosts ansible/playbooks/ejabberd_dev/bootstrap.yml
 
 Note: I force the use of SSH instead of paramiko, as SSH option seems more reliable.
@@ -68,14 +65,14 @@ Typically, you can check out the ejabberd code in the projects
 directory. It will be accessible in the VM (at least for VMware) from
 the shared folder /projects:
 
-    #!console
     git clone git@github.com:processone/ejabberd.git projects/ejabberd
 
-From the VM, you can then build ejabberd, with all dependancies
+From the VM, you can then build ejabberd, with all dependencies
 enabled for development:
     
-    #!console
     ./autogen.sh && ./configure --enable-mysql --enable-pgsql --enable-riak --enable-elixir --enable-tools 
+    make
+    make test
 
 Known issues
 ============
