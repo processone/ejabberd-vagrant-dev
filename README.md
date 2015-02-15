@@ -28,11 +28,11 @@ Commands:
 This is quick and easy setup, but insecure. Use a secure key if you plan
 to expose that VM to network (Outside your development machine)
 
-    $ ssh-add ~/.vagrant.d/insecure_private_key
+        ssh-add ~/.vagrant.d/insecure_private_key
 
 * Start Vagrant infrastructure:
 
-    $ vagrant up --provider=vmware_fusion
+        vagrant up --provider=vmware_fusion
 
 or if you want VirtualBox:
 
@@ -43,9 +43,9 @@ Note: if you have only VirtualBox or VMWare, no need to pass the provider argume
 
 * (Optional) Make sure SSH Agent is set to use your main key, with forward, to be able to clone git repository inside the VM:
 
-    $ ssh-add
-    $ export ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
-    $ export ANSIBLE_TRANSPORT="ssh"
+        ssh-add
+        export ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
+        export ANSIBLE_TRANSPORT="ssh"
 
 * Create ejabberd development environment:
 
