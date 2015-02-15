@@ -1,0 +1,5 @@
+Future tasks
+
+- Download ejabberd with git
+- Configure OpenLDAP for LDAP module testing
+

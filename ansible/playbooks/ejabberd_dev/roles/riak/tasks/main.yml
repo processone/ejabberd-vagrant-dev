@@ -1,0 +1,57 @@
+---
+
+- name: Ensure download directory is present
+  file: path={{ ansible_env.HOME }}/riak state=directory
+
+- name: Download Riak Ubuntu precise package
+  get_url: url={{ riakurl }} dest={{ ansible_env.HOME }}/riak/{{ riakvsn }}.deb
+
+- name: Install riak package
+  sudo: true
+  apt: deb={{ ansible_env.HOME }}/riak/{{ riakvsn }}.deb
+
+- name: Ensure soft nofile limits are adequate for Riak user
+  sudo: true
+  lineinfile: dest=/etc/security/limits.conf backup=yes line="riak soft nofile 65536" insertbefore="# End of file"
+
+- name: Ensure hard nofile limits are adequate for Riak user
+  sudo: true
+  lineinfile: dest=/etc/security/limits.conf backup=yes line="riak hard nofile 65536" insertbefore="# End of file"
+
+# Needed to tell Ubuntu Precise (12.04) to use limit settings:
+- name: Ensure PAM use security limits
+  sudo: true
+  lineinfile: dest=/etc/pam.d/common-session backup=yes line="session required pam_limits.so" insertbefore="# end of pam-auth-update config"
+  
+# == Configure Riak for ejabberd testing
+
+# Do not forget to update ejabberd_riak.beam (or manually symlink it) when testing
+- name: Copy ejabberd Riak beam
+  sudo: true
+  sudo_user: riak
+  copy: src=ejabberd_riak.beam dest=/etc/riak/ owner=riak group=riak mode=0644
+
+- name: Set Erlang parameters for Riak VM
+  sudo: true
+  sudo_user: riak
+  template: src=vm.args.j2 dest=/etc/riak/vm.args backup=yes owner=riak group=riak mode=0644
+  
+- name: Ensure Riak is configured to use leveldb backend
+  sudo: true
+  sudo_user: riak
+  lineinfile: dest=/etc/riak/riak.conf backup=yes regexp="^storage_backend =" line="storage_backend = leveldb"
+
+- name: Ensure Riak can work for testing in a very small VM (Small ring)
+  sudo: true
+  sudo_user: riak
+  lineinfile: dest=/etc/riak/riak.conf regexp="^ring_size =" line="ring_size = 8" insertafter="## ring_size = 64"
+  
+- name: Ensure Riak can work for testing in a very small VM (Disable anti-entropy)
+  sudo: true
+  sudo_user: riak
+  lineinfile: dest=/etc/riak/riak.conf regexp="^anti_entropy =" line="anti_entropy = passive"
+
+# == Ensure Riak is started on boot
+- name: Ensure Riak is started on boot
+  sudo: true
+  service: name=riak state=started enabled=true

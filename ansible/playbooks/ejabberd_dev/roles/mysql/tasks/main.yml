@@ -1,0 +1,26 @@
+---
+- name: Install mysql server package
+  sudo: true
+  apt: pkg=mysql-server state=installed
+  tags: [packages]
+  notify:
+    - mysql_secure_installation
+
+#- name: Create Mysql configuration file
+#  template: src=my.cnf dest=/etc/my.cnf
+#  notify:
+#  - restart mysql
+
+# Used by Ansible
+- name: Install mysql python client
+  sudo: true
+  apt: pkg=python-mysqldb state=installed
+  tags: [packages]
+
+- name: Ensure mysql is started on boot
+  sudo: true
+  service: name=mysql state=started enabled=true
+
+- mysql_user: name=ejabberd_test password=ejabberd_test priv=ejabberd_test.*:ALL state=present
+
+- mysql_db: name=ejabberd_test state=present

@@ -1,0 +1,21 @@
+---
+
+- name: Ensure download directory is present
+  file: path={{ ansible_env.HOME }}/erlang state=directory
+
+- name: download Erlang
+  get_url: url={{ erlangurl }} dest={{ ansible_env.HOME }}/erlang/{{ erlangsrc }}.tar.gz
+
+- name: Unpack Erlang source files
+  shell: cd {{ ansible_env.HOME }}/erlang && tar -xzvf {{ erlangsrc }}.tar.gz creates={{ ansible_env['HOME'] }}/erlang/{{ erlangsrc }}
+
+- name: Configure
+  shell: cd {{ ansible_env.HOME }}/erlang/{{ erlangsrc }} && ./configure --disable-hipe
+  when: is_ubuntu
+
+- name: Make all
+  shell: cd {{ ansible_env.HOME }}/erlang/{{ erlangsrc }} && make
+
+- name: Make install
+  sudo: yes
+  shell: cd {{ ansible_env.HOME }}/erlang/{{ erlangsrc }} && make install

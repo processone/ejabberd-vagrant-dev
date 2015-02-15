@@ -1,0 +1,9 @@
+---
+# Global variables
+
+# Define the download url for Erlang source files and the version you want to use.
+erlangurl: http://www.erlang.org/download/otp_src_17.4.tar.gz
+erlangsrc: otp_src_17.4 
+
+riakurl: http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.4/ubuntu/precise/riak_2.0.4-1_amd64.deb
+riakvsn: riak_2.0.4-1_amd64

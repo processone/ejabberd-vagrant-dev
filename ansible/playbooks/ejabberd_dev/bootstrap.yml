@@ -1,0 +1,16 @@
+---
+- name: Install ejabberd development environment
+  hosts: default
+
+  vars:
+    is_centos: "'{{ ansible_distribution|lower }}' == 'centos'"
+    is_debian: "'{{ ansible_distribution|lower }}' == 'debian'"
+    is_ubuntu: "'{{ ansible_distribution|lower }}' == 'ubuntu'"
+
+  roles:
+    - common
+    - erlang-src
+    - mysql
+    - postgresql
+    - riak
+#    - redis

@@ -1,0 +1,7 @@
+.DS_Store
+.vagrant/
+license.lic
+projects/*/
+
+\#*\#
+.\#*

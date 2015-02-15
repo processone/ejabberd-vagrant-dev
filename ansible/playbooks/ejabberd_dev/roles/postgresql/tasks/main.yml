@@ -1,0 +1,25 @@
+- name: Ensure packages are installed
+  apt: pkg={{ item }}
+  with_items:
+    - postgresql-9.1
+    - postgresql-client-9.1
+    - python-psycopg2
+  register: db_setup
+  sudo: true
+  tags: postgres_packages
+
+- name: Ensure postgresql is started on boot
+  sudo: true
+  service: name=postgresql state=started enabled=true
+  
+# Create test database and user for ejabberd tests
+- name: Ensure ejabberd_test database is created
+  postgresql_db: name=ejabberd_test template='template1'
+  sudo: yes
+  sudo_user: postgres
+
+- name: Ensure ejabberd_test user is created
+  postgresql_user: db=ejabberd_test name=ejabberd_test password=ejabberd_test
+  sudo: yes
+  sudo_user: postgres
+
