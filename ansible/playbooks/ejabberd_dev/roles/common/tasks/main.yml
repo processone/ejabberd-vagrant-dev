@@ -19,5 +19,7 @@
     - autoconf
     # needed to build ejabberd
     - libexpat1-dev
+    # For sqlite support
+    - libsqlite3-dev
 
 # TODO: Set proper timezone
