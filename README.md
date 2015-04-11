@@ -70,7 +70,7 @@ the shared folder /projects:
 From the VM, you can then build ejabberd, with all dependencies
 enabled for development:
     
-    ./autogen.sh && ./configure --enable-mysql --enable-pgsql --enable-riak --enable-elixir --enable-tools 
+    ./autogen.sh && ./configure --enable-mysql --enable-pgsql --enable-riak --enable-sqlite --enable-elixir --enable-tools 
     make
     make test
 
