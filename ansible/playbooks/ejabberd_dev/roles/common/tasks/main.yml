@@ -21,5 +21,6 @@
     - libexpat1-dev
     # For sqlite support
     - libsqlite3-dev
+    - libyaml-dev
 
 # TODO: Set proper timezone
