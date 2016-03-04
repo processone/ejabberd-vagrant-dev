@@ -17,5 +17,5 @@
   shell: cd {{ ansible_env.HOME }}/erlang/{{ erlangsrc }} && make
 
 - name: Make install
-  sudo: yes
+  become: true
   shell: cd {{ ansible_env.HOME }}/erlang/{{ erlangsrc }} && make install

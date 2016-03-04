@@ -1,4 +1,4 @@
 ---
 - name: restart mysql
-  sudo: true
+  become: true
   service: name=mysql state=restarted

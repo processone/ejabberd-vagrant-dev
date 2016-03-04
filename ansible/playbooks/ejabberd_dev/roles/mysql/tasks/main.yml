@@ -1,17 +1,17 @@
 ---
 - name: Install mysql server package
-  sudo: true
+  become: true
   apt: pkg=mysql-server state=installed
   tags: [packages]
 
 # Used by Ansible
 - name: Install mysql python client
-  sudo: true
+  become: true
   apt: pkg=python-mysqldb state=installed
   tags: [packages]
 
 - name: Ensure mysql is started on boot
-  sudo: true
+  become: true
   service: name=mysql state=started enabled=true
 
 
