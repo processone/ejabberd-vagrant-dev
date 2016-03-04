@@ -1,0 +1,2 @@
+# To create a default password for database in Vagrant VM (do not use in production)
+mysql_root_password: p3LjY2LxznmK
