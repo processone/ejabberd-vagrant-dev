@@ -1,26 +1,59 @@
 ---
 - name: Install mysql server package
-  sudo: true
+  become: true
   apt: pkg=mysql-server state=installed
   tags: [packages]
-  notify:
-    - mysql_secure_installation
-
-#- name: Create Mysql configuration file
-#  template: src=my.cnf dest=/etc/my.cnf
-#  notify:
-#  - restart mysql
 
 # Used by Ansible
 - name: Install mysql python client
-  sudo: true
+  become: true
   apt: pkg=python-mysqldb state=installed
   tags: [packages]
 
 - name: Ensure mysql is started on boot
-  sudo: true
+  become: true
   service: name=mysql state=started enabled=true
 
-- mysql_user: name=ejabberd_test password=ejabberd_test priv=ejabberd_test.*:ALL state=present
 
-- mysql_db: name=ejabberd_test state=present
+# Emulate mysql_secure_installation
+- name: Set mysql root password
+  when: mysql_root_password is defined
+  mysql_user: login_user=root user=root password="{{ mysql_root_password }}"
+
+- name: Copy MySQL client config
+  when: mysql_root_password is defined
+  template: src=templates/dotmy.cnf dest=~/.my.cnf mode=0600
+
+- name: Delete anonymous mysql user for fqdn
+  mysql_user: name="" host="{{ ansible_fqdn }}" state=absent
+
+
+- name: Delete anonymous mysql user for localhost
+  mysql_user: name="" state=absent
+
+- name: Secure mysql root user for ipv6
+  when: mysql_root_password is defined
+  mysql_user: user="root" password="{{ mysql_root_password }}" host="::1"
+
+- name: Secure mysql root user for ipv4
+  when: mysql_root_password is defined
+  mysql_user: user="root" password="{{ mysql_root_password }}" host="127.0.0.1"
+
+- name: Secure mysql root user for localhost
+  when: mysql_root_password is defined
+  mysql_user: user="root" password="{{ mysql_root_password }}" host="localhost"
+
+- name: Secure mysql root user for fqdn
+  when: mysql_root_password is defined
+  mysql_user: user="root" password="{{ mysql_root_password }}" host="{{ ansible_fqdn }}"
+
+- name: Remove mysql default test database
+  mysql_db: db=test state=absent
+
+
+# Add ejabberd test user & db
+- name: Add ejabberd_test user
+  mysql_user: name=ejabberd_test password=ejabberd_test priv=ejabberd_test.*:ALL state=present
+
+- name: Add ejabberd_test database
+  mysql_db: name=ejabberd_test state=present

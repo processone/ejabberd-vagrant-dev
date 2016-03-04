@@ -1,9 +1,9 @@
 ---
 - name: Install redis server package
-  sudo: true
+  become: true
   apt: pkg=redis-server state=installed
   tags: [packages]
 
 - name: Ensure redis is started on boot
-  sudo: true
+  become: true
   service: name=redis-server state=started enabled=true
